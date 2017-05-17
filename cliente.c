@@ -4,12 +4,38 @@
 
 /* Inicio do modulo de cliente*/
 
+void fazer_linha(){
+    int row,col,cont=0;
+    getmaxyx(stdscr,row,col);
+    do{    
+        printw("_ ");
+        cont++;
+    }while (cont < col/2);
+}
+
+void ler_teclado(){
+    char teclado[12];
+    int i=0;
+    printw("Digite o valor a calcular:");
+    getstr(teclado);
+    printw("voce escreveu %s",teclado);
+    
+    getch();
+    
+    do{
+    
+       printw("%c", teclado[i]);
+      
+       i++;
+    }while(i < 5);
+}
+
+
 int main(){
     /* printf("TESTE - Modulo de Cliente - COMPILADO"); */
 
-   char mesg[]="Just a string";		/* message to be appeared on the screen */
+ char mesg[]="Just a string";		/* message to be appeared on the screen */
  int row,col;				/* to store the number of rows and the number of colums of the screen */
- int cont=0;
 
  initscr();				/* start the curses mode */
  getmaxyx(stdscr,row,col);		/* get the number of rows and columns */
@@ -20,13 +46,11 @@ int main(){
  mvprintw(2,col-12,"Conectado");
  mvprintw(4,2,"Programa Cliente");
  mvprintw(6,2,"Escreva 'START' para ligar ao servidor");
- mvprintw(7,2,"Quando desejar terminar escreva 'END'");
+ mvprintw(7,2,"Quando desejar terminar escreva 'END'\n");
 
-do{    
-    printw("_");
-    cont=cont+1;
-}while (cont < col);
-
+fazer_linha();
+ler_teclado();
+ 
 refresh();
 getch();
 endwin();
@@ -34,4 +58,5 @@ endwin();
     
     return 0;
 }
+
 
