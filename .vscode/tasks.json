@@ -5,5 +5,38 @@
     "command": "make",
     "isShellCommand": true,
     "args": [],
-    "showOutput": "always"
+    "showOutput": "always",
+    "suppressTaskName": true,
+    "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceRoot}"],
+        "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+        }
+    },
+    "tasks": [
+        {
+            "taskName": "build all",
+            "showOutput": "always",
+            "isBuildCommand": true,
+            "args": ["all"]
+        },
+        {
+            "taskName": "build cliente",
+            "showOutput": "always",
+            "isBuildCommand": true,
+            "args": ["cliente"]
+        },
+        {
+            "taskName": "build servidor",
+            "showOutput": "always",
+            "isBuildCommand": true,
+            "args": ["servidor"]
+        }
+    ]
 }
