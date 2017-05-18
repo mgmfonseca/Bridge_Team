@@ -10,11 +10,12 @@
 #include <sys/ioctl.h>
 #include <pthread.h>
 #include <unistd.h>//read write
+#include "../comunicacao.h"
  
 void* Servidor(void* arg)
 {
     /*Buffer de entrada (armazena buffer do cliente)*/
-    char buffer_do_cliente[256];
+    char * buffer_do_cliente;
     /*Cast do ponteiro*/
     int sockEntrada = *(int *) arg;
     /*Loop "infinito"*/
@@ -22,11 +23,12 @@ void* Servidor(void* arg)
     for (;;)
     {
         /*Le o que vem do cliente*/
-        read(sockEntrada, buffer_do_cliente, sizeof (buffer_do_cliente));
+        buffer_do_cliente=ler_texto(sockEntrada);
         if (strcmp(buffer_do_cliente, "END") != 0)
         {
             /*Se buffer == END termina o programa*/
             printf("%s\n",buffer_do_cliente);
+            free(buffer_do_cliente);
         }
         else
              {
