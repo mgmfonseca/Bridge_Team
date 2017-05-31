@@ -9,7 +9,7 @@
 void Cliente(int clienteSockfd)
 {
   
-
+    
     do {
         //read(clienteSockfd,buffer_para_servidor, sizeof (buffer_para_servidor));
         printf("Para efetuar um cálculo escreva no formato 'numerooperaçãonumero'\n");
@@ -34,17 +34,22 @@ void Cliente(int clienteSockfd)
 int main()
 {   
     
-    
-   do {
+	while ((strcmp(buffer_para_servidor, "end") != 0))
+    {
         system("clear");
         printf("Digite 'start' para começar, se desejar sair digite 'end'");
         scanf("%s",buffer_para_servidor);
         fflush(stdin);
-       
-    }  while (strcmp(buffer_para_servidor, "start") != 0);
-    /*Define o descritor cliente*/
-    int descritorCliente;
-    descritorCliente = estabelecer_ligacao_servidor("127.0.0.1");
-    /*chama funcao do cliente passando o descritor*/
-    Cliente(descritorCliente);    
+		if (strcmp(buffer_para_servidor, "start") == 0)
+		{
+			int descritorCliente;
+			descritorCliente = estabelecer_ligacao_servidor("127.0.0.1");
+			Cliente(descritorCliente); 
+		}
+    }
+    if (strcmp(buffer_para_servidor, "end") == 0)
+	{
+		exit(1);
+	}
+      
 }

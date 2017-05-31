@@ -26,7 +26,7 @@ void* Servidor(void* arg)
         buffer_do_cliente=ler_texto(sockEntrada);
         if (strcmp(buffer_do_cliente, "end") != 0)
         {
-            /*Se buffer == END termina o programa*/
+            /*Se buffer == end termina o programa*/
             printf("%s\n",buffer_do_cliente);
             free(buffer_do_cliente);
         }

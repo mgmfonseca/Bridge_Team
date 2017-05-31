@@ -80,6 +80,8 @@ char * ler_texto(int socket)
 
 }
 
+
+
 int configuracaoServidor()
 {
     //nome do socket fornecido por argumento
@@ -89,7 +91,7 @@ int configuracaoServidor()
     //Cria o socket para comunicação de streams
     if ((sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-      printf("Erro no Socket\n");
+      return -3;
       exit(1);
     }
     //limpa a estrutura
@@ -105,15 +107,13 @@ int configuracaoServidor()
     //bind - Relaciona o socket com o endereco (nome)
     if (bind(sockfd, (struct sockaddr *) & serverAddr, sizeof (serverAddr)) < 0)
     {
-      printf("Erro no Socket\n");
-      exit(1);
+      return -4;
      }
     //canal de que vai ser utilizado para receber os pedidos de comunicação
     //backlog - numero máximo da lista de esperade pedidos de conexões pendentes
     if (listen(sockfd, 5) < 0)
     {
-      printf("Erro no Socket\n");
-      exit(1);
+      return -5;
     }
     return sockfd;
 }
