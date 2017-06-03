@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>//read write
-
 #include <sys/types.h>
 #include <sys/socket.h>//SOCK_STREAM
 #include <netdb.h>
@@ -47,8 +46,7 @@ int estabelecer_ligacao_servidor(char * endereco_ip)
 
 
    /*Faz a conexão com o servidor*/
-  
-   if(connect(clienteSockfd,(struct sockaddr *)&serv_addr, addrlen) < 0)
+    if(connect(clienteSockfd,(struct sockaddr *)&serv_addr, addrlen) < 0)
     {
         return -2;
     }
@@ -67,6 +65,7 @@ void escrever_texto(int socket, char * texto)
 
 }
 
+/*
 char * ler_texto(int socket)
 {
     int tamanho;
@@ -76,7 +75,30 @@ char * ler_texto(int socket)
     texto=(char*)malloc(tamanho);
     read(socket, texto, sizeof(char)*tamanho);
     return texto;
+    
+}  */
 
+char * ler_texto(int socket)
+{
+    int tamanho;
+    char * texto;  
+	
+	while(1)
+	{
+		if( read( sock, &tamanho, sizeof( int ) ) == 0 )
+			return 0;
 
+        texto=(char*)malloc(tamanho);
+
+		//char* mensagem = (char*) malloc(tamanho);
+		read(socket, texto, sizeof(char)*tamanho);
+	
+		printf("Cliente %d enviou: %s\n", sock, buffer );
+		//escreverSocket( sock, "obrigado");
+        escrever_texto( sock, "obrigado");
+	}
+	
+	
+     return texto;
 
 }
