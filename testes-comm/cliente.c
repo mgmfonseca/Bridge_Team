@@ -4,7 +4,8 @@
 #include <string.h>
 
 /*Buffer de dados máximo a ser mandado para o servidor*/
-    char buffer_para_servidor[256];
+char buffer_para_servidor[256];
+
 
 void Cliente(int clienteSockfd)
 {
@@ -19,22 +20,23 @@ void Cliente(int clienteSockfd)
         fflush(stdin);
         system("clear");
 
-        /*Envia para o servidor*/
+        //Envia para o servidor
         //ssize_t write(int fd, const void *buf, size_t count);
         //write(clienteSockfd, buffer_para_servidor, sizeof (buffer_para_servidor));
         escrever_texto(clienteSockfd,buffer_para_servidor);
 
-    /*Mensagem para sair com a palavra END*/
+    //Mensagem para sair com a palavra END
     } while (strcmp(buffer_para_servidor, "end") != 0);
-    /**Encerra o descritor*/
+    //Encerra o descritor
     //close(clienteSockfd);
     exit(1);
 } 
 
+
 int main()
-{   
-    
-	while ((strcmp(buffer_para_servidor, "end") != 0))
+{    
+	    
+    while ((strcmp(buffer_para_servidor, "end") != 0))
     {
         system("clear");
         printf("Digite 'start' para começar, se desejar sair digite 'end'");

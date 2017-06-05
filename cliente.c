@@ -1,12 +1,25 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ncurses.h>
 #include <string.h>
-#include<comunicacao.h>
-
-char buffer_para_servidor[256];
-
+#include"comunicacao.h"
 
 /* Inicio do modulo de cliente*/
+struct reg_teclado buffer_servidor;
+
+struct reg_teclado
+{
+    char instrucao[256];
+};
+
+struct reg_teclado teclado()
+{
+    struct reg_teclado resultado;
+
+    mvscanw(9,2,"%s",resultado.instrucao);
+    return(resultado);
+}
+
 // Desenhar linha horizontal
 void fazer_linha(){
     int row,col,cont=0;
@@ -17,90 +30,103 @@ void fazer_linha(){
     }while (cont < col/2);
 }
 
-// Experiencia com o teclado (para apagar)
-void ler_teclado(){
-    char teclado[12];
-    int i=0;
-    printw("Digite o valor a calcular:");
-    getstr(teclado);
-    printw("voce escreveu %s",teclado);
+int output_ligado(int ligado)
+{
+    int col, row;
+    getmaxyx(stdscr,row,col);
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, 2, 0);
+    init_pair(3, 7, 0);    
     
-    getch();    
-    do{    
-       printw("%c", teclado[i]);      
-       i++;
-    }while(i < 5);
+    if(ligado==1)
+    {
+        attron(COLOR_PAIR(2));//colocar a vermelho a palavra 
+        mvprintw(2,col-12,"Conectado");
+        attroff(COLOR_PAIR(2));
+    }
+    else
+    {
+        attron(COLOR_PAIR(1));//colocar a vermelho a palavra 
+        mvprintw(2,col-12,"Desconectado");
+        attroff(COLOR_PAIR(1));
+    }
 }
 
 void consola_c()
 {
-    int row,col;				/* to store the number of rows and the number of colums of the screen */
-    initscr();				/* start the curses mode */
-    start_color();			/* Start color */
-    getmaxyx(stdscr,row,col);		/* get the number of rows and columns */
- 
+    int row,col;			    /* to store the number of rows and the number of colums of the screen */
+    initscr();				    /* start the curses mode */
+    start_color();			    /* Start color */
+    getmaxyx(stdscr,row,col);	/* get the number of rows and columns */
     mvprintw(row-2,0,"This screen has %d rows and %d columns\n",row,col);
     mvprintw(2,4,"ECRAN PRINCIPAL");
     
     // Altera a cor do estado de ligação com o servidor
-    init_pair(1, COLOR_RED, COLOR_BLACK);
-    init_pair(2, 2, 0);
-    init_pair(3, 7, 0);
-    attron(COLOR_PAIR(1));//colocar a vermelho a palavra 
-    mvprintw(2,col-12,"Desconectado");
-    attron(COLOR_PAIR(3));//volta á cor original branco letra e preto fundo
- 
+    output_ligado(0);
+  
     mvprintw(4,2,"Programa Cliente");
     mvprintw(6,2,"Escreva 'START' para ligar ao servidor");
-    mvprintw(7,2,"Quando desejar terminar escreva 'END'\n");
+    mvprintw(7,2,"Quando desejar terminar escreva 'END'\n");    
 
     fazer_linha();
-   // ler_teclado();
- 
-    refresh();
-    //getch();
-    endwin();
     
-    //return 0;
+    refresh();   
+    endwin();    
 }
 
 void Cliente(int clienteSockfd)
-{
-  
-    
+{    
+   //struct reg_teclado buffer_servidor;//para apagar
     do {
-        scanf("%s",buffer_para_servidor);
         fflush(stdin);
-        system("clear");
-        /*Envia para o servidor*/        
-        escrever_texto(clienteSockfd,buffer_para_servidor);
-    /*Mensagem para sair com a palavra END*/
-    } while (strcmp(buffer_para_servidor, "end") != 0);
-    /**Encerra o descritor*/
-    //close(clienteSockfd);
-    exit(1);
+        //system("clear");
+        //Envia para o servidor   
+        buffer_servidor=teclado();     
+        escrever_texto(clienteSockfd, buffer_servidor.instrucao);
+    //Mensagem para sair com a palavra END
+    } while (strcmp(buffer_servidor.instrucao, "end") != 0);
+    //Encerra o descritor
+    //close(clienteSockfd);   
+    //exit(1);
+}
+
+void Comunicar_servidor()
+{
+    //struct reg_teclado buffer_servidor;//para apagar
+    while ((strcmp(buffer_servidor.instrucao, "end") != 0))
+        {
+            //system("clear");
+            //scanf("%s",buffer_servidor);
+            buffer_servidor=teclado();
+            fflush(stdin);
+            if (strcmp(buffer_servidor.instrucao, "start") == 0)
+            {
+                int descritorCliente;
+                descritorCliente = estabelecer_ligacao_servidor("127.0.0.1");                
+                if(descritorCliente > 0)
+                {
+                    int lig=1;
+                    output_ligado(lig);
+                }
+                Cliente(descritorCliente);                
+            }
+        }
+
+   /* if (strcmp(buffer_servidor.instrucao, "end") == 0)
+    {
+        exit(1);
+    }*/
 }
 
 int main()
 {    
+    struct reg_teclado valor;
     consola_c();
-
-    while ((strcmp(buffer_para_servidor, "end") != 0))
-    {
-        system("clear");
-        scanf("%s",buffer_para_servidor);
-        fflush(stdin);
-		if (strcmp(buffer_para_servidor, "start") == 0)
-		{
-			int descritorCliente;
-			descritorCliente = estabelecer_ligacao_servidor("127.0.0.1");
-			Cliente(descritorCliente); 
-		}
-    }
-    if (strcmp(buffer_para_servidor, "end") == 0)
-	{
-		exit(1);
-	}
-
+    Comunicar_servidor();
+    //valor=teclado();    
+    mvprintw(10,3,"digitaste: %s",valor.instrucao);//para eliminar
+    refresh();
     return 0;
 }
+
+
