@@ -27,7 +27,11 @@ void* Servidor(void* arg)
         buffer_do_cliente=ler_texto(sockEntrada);
         if (strcmp(buffer_do_cliente, "end") != 0)
         {
+<<<<<<< HEAD
             //Se buffer == END termina o programa
+=======
+            /*Se buffer == end termina o programa*/
+>>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
             printf("%s\n",buffer_do_cliente);
             free(buffer_do_cliente);
         }
@@ -42,43 +46,7 @@ void* Servidor(void* arg)
 }
 
  
-int configuracaoServidor()
-{
-    //nome do socket fornecido por argumento
-    int sockfd;
-    //Declaracao da estrutura do socket
-    struct sockaddr_in serverAddr;
-    //Cria o socket para comunicação de streams
-    if ((sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-    {
-      printf("Erro no Socket\n");
-      exit(1);
-    }
-    //limpa a estrutura
-    memset(&serverAddr, 0, sizeof (serverAddr));
-    //adress family
-    serverAddr.sin_family = AF_INET;
-    //The htonl() function converts the unsigned integer hostlong from host byte order to network byte order.
-    //(A constante INADDR_ANY e todos os ips ou qualquer ip) htonl -> conversao
-    // bind your socket to localhost only - INADDR_ANY
-    serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    //Define a porta
-    serverAddr.sin_port = htons(6881);
-    //bind - Relaciona o socket com o endereco (nome)
-    if (bind(sockfd, (struct sockaddr *) & serverAddr, sizeof (serverAddr)) < 0)
-    {
-      printf("Erro no Socket\n");
-      exit(1);
-     }
-    //canal de que vai ser utilizado para receber os pedidos de comunicação
-    //backlog - numero máximo da lista de esperade pedidos de conexões pendentes
-    if (listen(sockfd, 5) < 0)
-    {
-      printf("Erro no Socket\n");
-      exit(1);
-    }
-    return sockfd;
-}
+int configuracaoServidor();
  
 int main()
 {
