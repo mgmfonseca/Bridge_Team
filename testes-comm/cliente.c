@@ -22,17 +22,17 @@ void Cliente(int clienteSockfd)
         printf("Quando desejar terminar escreva 'end':\n");
         scanf("%s",buffer_para_servidor);
         fflush(stdin);
-        system("clear");
+        //system("clear");
 
         //Envia para o servidor
         //ssize_t write(int fd, const void *buf, size_t count);
         //write(clienteSockfd, buffer_para_servidor, sizeof (buffer_para_servidor));
         escrever_texto(clienteSockfd,buffer_para_servidor);
+        printf("%s\n",ler_texto(clienteSockfd));
 
-
-        //Mensagem para sair com a palavra END
-        } while (strcmp(buffer_para_servidor, "end") != 0);
-        //Encerra o descritor
+    /*Mensagem para sair com a palavra END*/
+    } while (strcmp(buffer_para_servidor, "end") != 0);
+    /**Encerra o descritor*/
 
     //close(clienteSockfd);
     exit(1);
@@ -40,6 +40,10 @@ void Cliente(int clienteSockfd)
 
 
 int main()
+    
+	    
+   
+
 {   
     
 	while ((strcmp(buffer_para_servidor, "end") != 0))
@@ -58,8 +62,7 @@ int main()
     }
     if (strcmp(buffer_para_servidor, "end") == 0)
 	{
-		return 0;
-        //exit(1);
+		exit(1);
 	}
       
 }
