@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <ncurses.h>
 #include <string.h>
 #include"comunicacao.h"
@@ -58,27 +59,7 @@ int output_ligado(int ligado)
     }
 }
 
-void consola_c()
-{
-    int row,col;			    /* to store the number of rows and the number of colums of the screen */
-    initscr();				    /* start the curses mode */
-    start_color();			    /* Start color */
-    getmaxyx(stdscr,row,col);	/* get the number of rows and columns */
-    mvprintw(row-2,0,"This screen has %d rows and %d columns\n",row,col);
-    mvprintw(2,4,"ECRAN PRINCIPAL");
-    
-    // Altera a cor do estado de ligação com o servidor
-    output_ligado(0);
-  
-    mvprintw(4,2,"Programa Cliente");
-    mvprintw(6,2,"Escreva 'START' para ligar ao servidor");
-    mvprintw(7,2,"Quando desejar terminar escreva 'END'\n");    
 
-    fazer_linha("_ ");
-    
-    refresh();   
-    endwin();    
-}
 
 void Cliente(int clienteSockfd)
 {    
@@ -90,9 +71,8 @@ void Cliente(int clienteSockfd)
         escrever_texto(clienteSockfd, buffer_servidor.instrucao);
     //Mensagem para sair com a palavra END
     } while (strcmp(buffer_servidor.instrucao, "end") != 0);
-    
     //Encerra o descritor
-    //close(clienteSockfd);   
+    fechar_ligacao(clienteSockfd);   
     //exit(1);
 }
 
@@ -113,20 +93,42 @@ void Comunicar_servidor()
                 {
                     output_ligado(1);
                 }
-                Cliente(descritorCliente);                
+                Cliente(descritorCliente); 
+                buffer_servidor.instrucao[0]='\0';               
+                output_ligado(0);
             }
         }
-        output_ligado(0);
+        
+}
+
+void consola_c()
+{
+    int row,col;			    /* to store the number of rows and the number of colums of the screen */
+    initscr();				    /* start the curses mode */
+    start_color();			    /* Start color */
+    getmaxyx(stdscr,row,col);	/* get the number of rows and columns */
+    mvprintw(row-2,0,"This screen has %d rows and %d columns\n",row,col);
+    mvprintw(2,4,"ECRAN PRINCIPAL");
+    
+    // Altera a cor do estado de ligação com o servidor
+    output_ligado(0);
+  
+    mvprintw(4,2,"Programa Cliente");
+    mvprintw(6,2,"Escreva 'START' para ligar ao servidor");
+    mvprintw(7,2,"Quando desejar terminar escreva 'END'\n");    
+
+    fazer_linha("_ ");
+    
+    refresh();
+    Comunicar_servidor();  
+    endwin();    
 }
 
 int main()
 {    
     struct reg_teclado valor;
     consola_c();
-    Comunicar_servidor();
-    //valor=teclado();    
-    mvprintw(10,3,"digitaste: %s",valor.instrucao);//para eliminar
-    refresh();
+    //Comunicar_servidor();
     return 0;
 }
 

@@ -18,23 +18,27 @@ void* Servidor(void* arg)
     /*Cast do ponteiro*/
     int sockEntrada = *(int *) arg;
     /*Loop "infinito"*/
-    printf("Mensagem recebida: \n");
-    for (;;)
+    printf("Cliente ligado: \n");
+    while(1)
     {
         /*Le o que vem do cliente*/
         buffer_do_cliente=ler_texto(sockEntrada);
         if (strcmp(buffer_do_cliente, "end") != 0)
         {
             /*Se buffer == END termina o programa*/
-            printf("%s\n",buffer_do_cliente);
+            printf("%s %d \n",buffer_do_cliente, strlen(buffer_do_cliente));
+            printf("Cliente %d enviou: %s\n", sockEntrada, buffer_do_cliente);
+		
             free(buffer_do_cliente);
         }
         else
         {
             /*Encerra o descritor*/
-            close(sockEntrada);
+            //fechar_ligacao(sockEntrada);
             /*Encerra a thread*/
-            pthread_exit((void*) 0);
+            //pthread_exit((void*) 0);
+            printf("ligacoa fechad acom o cliente %d \n", sockEntrada);
+            return(0);
         }
     }
 }
@@ -56,21 +60,21 @@ int main()
         unsigned int clntLen;
         clntLen = sizeof (clienteAddr);
         //declara uma thread
-    pthread_t thread;
-    //Fica a aguardar a conexao do cliente
+        pthread_t thread;
+        //Fica a aguardar a conexao do cliente
         if ((clienteSockfd = accept(sockfd, (struct sockaddr *) & clienteAddr, &clntLen)) < 0)
         {
-      printf("Erro no Socket\n");
-      exit(1);
-    }
+         printf("Erro no Socket\n");
+         return (0);
+        }
         //Inicializa a thread
         if (pthread_create(&thread, NULL, Servidor, &clienteSockfd) != 0)
-       {
+        {
             printf("Erro na Thread\n");
-            exit(1);
-       }
+            return (0);
+        }
  
         pthread_detach(thread);
     }
-    exit(0);
+    return(0);
 }
