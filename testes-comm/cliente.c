@@ -4,12 +4,12 @@
 #include <string.h>
 
 /*Buffer de dados máximo a ser mandado para o servidor*/
-<<<<<<< HEAD
+
 char buffer_para_servidor[256];
 
-=======
+
     char buffer_para_servidor[256];
->>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
+
 
 void Cliente(int clienteSockfd)
 {
@@ -29,30 +29,21 @@ void Cliente(int clienteSockfd)
         //write(clienteSockfd, buffer_para_servidor, sizeof (buffer_para_servidor));
         escrever_texto(clienteSockfd,buffer_para_servidor);
 
-<<<<<<< HEAD
-    //Mensagem para sair com a palavra END
-    } while (strcmp(buffer_para_servidor, "end") != 0);
-    //Encerra o descritor
-=======
-    /*Mensagem para sair com a palavra END*/
-    } while (strcmp(buffer_para_servidor, "end") != 0);
-    /**Encerra o descritor*/
->>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
+
+        //Mensagem para sair com a palavra END
+        } while (strcmp(buffer_para_servidor, "end") != 0);
+        //Encerra o descritor
+
     //close(clienteSockfd);
     exit(1);
 } 
 
 
 int main()
-<<<<<<< HEAD
-{    
-	    
-    while ((strcmp(buffer_para_servidor, "end") != 0))
-=======
 {   
     
 	while ((strcmp(buffer_para_servidor, "end") != 0))
->>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
+
     {
         system("clear");
         printf("Digite 'start' para começar, se desejar sair digite 'end'");
@@ -67,7 +58,8 @@ int main()
     }
     if (strcmp(buffer_para_servidor, "end") == 0)
 	{
-		exit(1);
+		return 0;
+        //exit(1);
 	}
       
 }

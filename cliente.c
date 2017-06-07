@@ -12,23 +12,29 @@ struct reg_teclado
     char instrucao[256];
 };
 
+// Desenhar linha horizontal
+void fazer_linha(char* conteudo){
+    int row,col,cont=0;
+    getmaxyx(stdscr,row,col);
+    do{    
+        printw("%s",conteudo);
+        cont++;
+    }while (cont < col/(strlen(conteudo)));
+}
+
 struct reg_teclado teclado()
 {
     struct reg_teclado resultado;
 
     mvscanw(9,2,"%s",resultado.instrucao);
+    //scanw("%s",resultado.instrucao);
+    move(9,0);
+    fazer_linha(" ");
     return(resultado);
+    
 }
 
-// Desenhar linha horizontal
-void fazer_linha(){
-    int row,col,cont=0;
-    getmaxyx(stdscr,row,col);
-    do{    
-        printw("_ ");
-        cont++;
-    }while (cont < col/2);
-}
+
 
 int output_ligado(int ligado)
 {
@@ -41,7 +47,7 @@ int output_ligado(int ligado)
     if(ligado==1)
     {
         attron(COLOR_PAIR(2));//colocar a vermelho a palavra 
-        mvprintw(2,col-12,"Conectado");
+        mvprintw(2,col-12,"Conectado   ");
         attroff(COLOR_PAIR(2));
     }
     else
@@ -68,7 +74,7 @@ void consola_c()
     mvprintw(6,2,"Escreva 'START' para ligar ao servidor");
     mvprintw(7,2,"Quando desejar terminar escreva 'END'\n");    
 
-    fazer_linha();
+    fazer_linha("_ ");
     
     refresh();   
     endwin();    
@@ -79,12 +85,12 @@ void Cliente(int clienteSockfd)
    //struct reg_teclado buffer_servidor;//para apagar
     do {
         fflush(stdin);
-        //system("clear");
         //Envia para o servidor   
         buffer_servidor=teclado();     
         escrever_texto(clienteSockfd, buffer_servidor.instrucao);
     //Mensagem para sair com a palavra END
     } while (strcmp(buffer_servidor.instrucao, "end") != 0);
+    
     //Encerra o descritor
     //close(clienteSockfd);   
     //exit(1);
@@ -105,17 +111,12 @@ void Comunicar_servidor()
                 descritorCliente = estabelecer_ligacao_servidor("127.0.0.1");                
                 if(descritorCliente > 0)
                 {
-                    int lig=1;
-                    output_ligado(lig);
+                    output_ligado(1);
                 }
                 Cliente(descritorCliente);                
             }
         }
-
-   /* if (strcmp(buffer_servidor.instrucao, "end") == 0)
-    {
-        exit(1);
-    }*/
+        output_ligado(0);
 }
 
 int main()

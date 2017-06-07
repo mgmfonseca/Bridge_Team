@@ -62,21 +62,6 @@ void escrever_texto(int socket, char * texto)
 
 }
 
-/*
-char * ler_texto(int socket)
-{
-    int tamanho;
-    char * texto;
- 
-    read(socket, &tamanho, sizeof(int));
-    texto=(char*)malloc(tamanho);
-    read(socket, texto, sizeof(char)*tamanho);
-   
-    return texto;
-    
-}  */
-
-<<<<<<< HEAD
 char * ler_texto(int socket)
 {
     int tamanho;
@@ -86,13 +71,9 @@ char * ler_texto(int socket)
 	{
 		if( read( socket, &tamanho, sizeof( int ) ) == 0 )
 			return 0;
-=======
-}
->>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
-
+    
         texto=(char*)malloc(tamanho);
 
-<<<<<<< HEAD
 		//char* mensagem = (char*) malloc(tamanho);
 		read(socket, texto, sizeof(char)*tamanho);
 	
@@ -101,7 +82,8 @@ char * ler_texto(int socket)
         escrever_texto( socket, "obrigado");
 	}	
     return texto;
-=======
+}
+
 
 int configuracaoServidor()
 {
@@ -137,5 +119,4 @@ int configuracaoServidor()
       return -5;
     }
     return sockfd;
->>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
 }

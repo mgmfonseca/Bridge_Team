@@ -27,11 +27,11 @@ void* Servidor(void* arg)
         buffer_do_cliente=ler_texto(sockEntrada);
         if (strcmp(buffer_do_cliente, "end") != 0)
         {
-<<<<<<< HEAD
+
             //Se buffer == END termina o programa
-=======
+
             /*Se buffer == end termina o programa*/
->>>>>>> 715819f8cf5867db1f626acf5f2cb81326503580
+
             printf("%s\n",buffer_do_cliente);
             free(buffer_do_cliente);
         }
