@@ -41,7 +41,8 @@ void* Servidor(void* arg)
                 escrever_texto(sockEntrada,f_instrucao);  
             }
             else 
-            printf("Erro na introdução da instrução");
+            escrever_texto(sockEntrada,"ERRO de introdução\n");  
+            
             		
             free(buffer_do_cliente);
         }
