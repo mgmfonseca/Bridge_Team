@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>//read write
+#include <unistd.h>
 #include <sys/types.h>
-#include <sys/socket.h>//SOCK_STREAM
+#include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 #include <ctype.h>
+#include <ncurses.h>
 
 
-char END[] = "end";
+
  
 int estabelecer_ligacao_servidor(char * endereco_ip)
 {
@@ -50,46 +51,37 @@ int estabelecer_ligacao_servidor(char * endereco_ip)
     }
     return clienteSockfd;
 }
+
+void fechar_ligacao(int socket)
+{
+    close(socket);
+}
  
 
 void escrever_texto(int socket, char * texto)
 {    
     //define tamanho do texto +1 pelo terminos do texto \0
     int tamanho=strlen(texto)+1;
+    printw("\n%d\n%s\n", tamanho, texto);
+    refresh();
     //enviamos tamanho e depois texto
+    write(socket, &tamanho, sizeof(int));
     write(socket, texto, sizeof(char) * tamanho);
 
 }
 
-/*
 char * ler_texto(int socket)
 {
     int tamanho;
-    char * texto;
- 
-    read(socket, &tamanho, sizeof(int));
+    char * texto;  
+    if( read( socket, &tamanho, sizeof( int ) ) == 0 )
+        return 0;    
     texto=(char*)malloc(tamanho);
-    read(socket, texto, sizeof(char)*tamanho);
-   
+    //char* mensagem = (char*) malloc(tamanho);
+    read(socket, texto, sizeof(char)*tamanho);		
+
     return texto;
-    
-}  */
-
-
-char * ler_texto(int socket)
-{
-    int tamanho;
-    
-    char *texto;  
-    texto=(char*)malloc(256 * sizeof(char));
-
-    tamanho=read( socket, texto, 256 * sizeof(char) );
-    if (tamanho < 0)
-        return END;
-    
-    return texto;
-}	
-    
+}
 
 
 int configuracaoServidor()
@@ -126,5 +118,4 @@ int configuracaoServidor()
       return -5;
     }
     return sockfd;
-
 }
