@@ -28,14 +28,11 @@ struct reg_teclado teclado()
     struct reg_teclado resultado;
 
     mvscanw(9,2,"%s",resultado.instrucao);
-    //scanw("%s",resultado.instrucao);
     move(9,0);
     fazer_linha(" ");
     return(resultado);
     
 }
-
-
 
 int output_ligado(int ligado)
 {
@@ -59,8 +56,6 @@ int output_ligado(int ligado)
     }
 }
 
-
-
 void Cliente(int clienteSockfd)
 {    
    //struct reg_teclado buffer_servidor;//para apagar
@@ -69,20 +64,20 @@ void Cliente(int clienteSockfd)
         //Envia para o servidor   
         buffer_servidor=teclado();     
         escrever_texto(clienteSockfd, buffer_servidor.instrucao);
+        
+        printw("O resultado de %s",ler_texto(clienteSockfd));
+
+
     //Mensagem para sair com a palavra END
     } while (strcmp(buffer_servidor.instrucao, "end") != 0);
     //Encerra o descritor
     fechar_ligacao(clienteSockfd);   
-    //exit(1);
 }
 
 void Comunicar_servidor()
 {
-    //struct reg_teclado buffer_servidor;//para apagar
     while ((strcmp(buffer_servidor.instrucao, "end") != 0))
-        {
-            //system("clear");
-            //scanf("%s",buffer_servidor);
+    {
             buffer_servidor=teclado();
             fflush(stdin);
             if (strcmp(buffer_servidor.instrucao, "start") == 0)
@@ -90,14 +85,13 @@ void Comunicar_servidor()
                 int descritorCliente;
                 descritorCliente = estabelecer_ligacao_servidor("127.0.0.1");                
                 if(descritorCliente > 0)
-                {
                     output_ligado(1);
-                }
+                
                 Cliente(descritorCliente); 
                 buffer_servidor.instrucao[0]='\0';               
                 output_ligado(0);
             }
-        }
+    }
         
 }
 
@@ -108,8 +102,7 @@ void consola_c()
     start_color();			    /* Start color */
     getmaxyx(stdscr,row,col);	/* get the number of rows and columns */
     mvprintw(row-2,0,"This screen has %d rows and %d columns\n",row,col);
-    mvprintw(2,4,"ECRAN PRINCIPAL");
-    
+    mvprintw(2,4,"ECRAN PRINCIPAL");    
     // Altera a cor do estado de ligação com o servidor
     output_ligado(0);
   
@@ -128,7 +121,7 @@ int main()
 {    
     struct reg_teclado valor;
     consola_c();
-    //Comunicar_servidor();
+    
     return 0;
 }
 

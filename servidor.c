@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <unistd.h>//read write
 #include "comunicacao.h"
+#include "cpu.h"
  
 void* Servidor(void* arg)
 {
@@ -17,6 +18,10 @@ void* Servidor(void* arg)
     char * buffer_do_cliente;
     /*Cast do ponteiro*/
     int sockEntrada = *(int *) arg;
+
+    char f_instrucao[256];
+    int resultado;
+
     /*Loop "infinito"*/
     printf("Cliente ligado: \n");
     while(1)
@@ -25,10 +30,19 @@ void* Servidor(void* arg)
         buffer_do_cliente=ler_texto(sockEntrada);
         if (strcmp(buffer_do_cliente, "end") != 0)
         {
-            /*Se buffer == END termina o programa*/
             printf("%s %d \n",buffer_do_cliente, strlen(buffer_do_cliente));
             printf("Cliente %d enviou: %s\n", sockEntrada, buffer_do_cliente);
-		
+             
+            if (validar(buffer_do_cliente)>0)
+            {
+                resultado=calcular(buffer_do_cliente);
+                sprintf(f_instrucao,"%s=%d",buffer_do_cliente,resultado);
+                printf("%s",f_instrucao);
+                escrever_texto(sockEntrada,f_instrucao);  
+            }
+            else 
+            printf("Erro na introdução da instrução");
+            		
             free(buffer_do_cliente);
         }
         else
@@ -64,8 +78,8 @@ int main()
         //Fica a aguardar a conexao do cliente
         if ((clienteSockfd = accept(sockfd, (struct sockaddr *) & clienteAddr, &clntLen)) < 0)
         {
-         printf("Erro no Socket\n");
-         return (0);
+            printf("Erro no Socket\n");
+            return (0);
         }
         //Inicializa a thread
         if (pthread_create(&thread, NULL, Servidor, &clienteSockfd) != 0)

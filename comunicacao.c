@@ -33,9 +33,8 @@ int estabelecer_ligacao_servidor(char * endereco_ip)
     clienteSockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     
     if (clienteSockfd < 0)
-    {
         return -1;
-    }
+    
     /*Limpa a estrutura*/
     bzero((char *) & serv_addr, sizeof (serv_addr));
     /*Direcciona a familia*/
@@ -46,9 +45,8 @@ int estabelecer_ligacao_servidor(char * endereco_ip)
     serv_addr.sin_port = htons(6881);
    /*Faz a conexão com o servidor*/
     if(connect(clienteSockfd,(struct sockaddr *)&serv_addr, addrlen) < 0)
-    {          
         return -2;
-    }
+    
     return clienteSockfd;
 }
 
@@ -62,12 +60,10 @@ void escrever_texto(int socket, char * texto)
 {    
     //define tamanho do texto +1 pelo terminos do texto \0
     int tamanho=strlen(texto)+1;
-    printw("\n%d\n%s\n", tamanho, texto);
     refresh();
     //enviamos tamanho e depois texto
     write(socket, &tamanho, sizeof(int));
     write(socket, texto, sizeof(char) * tamanho);
-
 }
 
 char * ler_texto(int socket)
@@ -93,8 +89,8 @@ int configuracaoServidor()
     //Cria o socket para comunicação de streams
     if ((sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-      return -3;
-      exit(1);
+        return -3;
+        exit(1);
     }
     //limpa a estrutura
     memset(&serverAddr, 0, sizeof (serverAddr));
@@ -109,13 +105,13 @@ int configuracaoServidor()
     //bind - Relaciona o socket com o endereco (nome)
     if (bind(sockfd, (struct sockaddr *) & serverAddr, sizeof (serverAddr)) < 0)
     {
-      return -4;
-     }
+        return -4;
+    }
     //canal de que vai ser utilizado para receber os pedidos de comunicação
     //backlog - numero máximo da lista de esperade pedidos de conexões pendentes
     if (listen(sockfd, 5) < 0)
     {
-      return -5;
+        return -5;
     }
     return sockfd;
 }
