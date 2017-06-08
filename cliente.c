@@ -65,7 +65,7 @@ void Cliente(int clienteSockfd)
         buffer_servidor=teclado();     
         escrever_texto(clienteSockfd, buffer_servidor.instrucao);
         
-        printw("O resultado de %s",ler_texto(clienteSockfd));
+        mvprintw(9,2,"O resultado de %s",ler_texto(clienteSockfd));
 
 
     //Mensagem para sair com a palavra END

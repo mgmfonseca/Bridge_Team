@@ -52,7 +52,7 @@ void* Servidor(void* arg)
             //fechar_ligacao(sockEntrada);
             /*Encerra a thread*/
             //pthread_exit((void*) 0);
-            printf("ligacoa fechad acom o cliente %d \n", sockEntrada);
+            printf("Ligação fechada com o cliente %d \n", sockEntrada);
             return(0);
         }
     }
