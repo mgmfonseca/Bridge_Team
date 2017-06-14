@@ -40,18 +40,15 @@ void* Servidor(void* arg)
                 printf("%s",f_instrucao);
                 escrever_texto(sockEntrada,f_instrucao);  
             }
-            else 
-            escrever_texto(sockEntrada,"ERRO de introdução\n");  
-            
-            		
+            else
+            {
+            escrever_texto(sockEntrada,"ERRO");             
+            }		
             free(buffer_do_cliente);
         }
         else
         {
-            /*Encerra o descritor*/
-            //fechar_ligacao(sockEntrada);
-            /*Encerra a thread*/
-            //pthread_exit((void*) 0);
+            
             printf("Ligação fechada com o cliente %d \n", sockEntrada);
             return(0);
         }

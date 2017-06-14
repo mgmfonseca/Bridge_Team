@@ -58,18 +58,28 @@ int output_ligado(int ligado)
 
 void Cliente(int clienteSockfd)
 {    
-   //struct reg_teclado buffer_servidor;//para apagar
+   char*teste_resultado;//
+
     do {
         fflush(stdin);
         //Envia para o servidor   
         buffer_servidor=teclado();     
         escrever_texto(clienteSockfd, buffer_servidor.instrucao);
-        
-        mvprintw(9,2,"O resultado de %s",ler_texto(clienteSockfd));
+        move(10,0);
+        fazer_linha(" ");
+        teste_resultado=ler_texto(clienteSockfd);   //    
+        if(strcmp(teste_resultado,"ERRO")==0)
+        {
+            mvprintw(10,2,"ERRO na introducao da string");
+        }
+        else
+        {
+        mvprintw(10,2,"O resultado de %s",teste_resultado);
+        }
+        // mvprintw(10,2,"O resultado de %s",ler_texto(clienteSockfd));
 
-
-    //Mensagem para sair com a palavra END
-    } while (strcmp(buffer_servidor.instrucao, "end") != 0);
+        //Mensagem para sair com a palavra END
+        } while (strcmp(buffer_servidor.instrucao, "end") != 0);
     //Encerra o descritor
     fechar_ligacao(clienteSockfd);   
 }
